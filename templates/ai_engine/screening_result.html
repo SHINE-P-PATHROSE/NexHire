@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}AI Screening Result{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="mb-3">🤖 AI Screening Result</h3>
+                <h5>{{ application.candidate.username }} → {{ application.job.title }}</h5>
+                <hr>
+
+                <!-- Score -->
+                <div class="text-center mb-4">
+                    <h1 class="display-4
+                        {% if result.score >= 70 %}text-success
+                        {% elif result.score >= 40 %}text-warning
+                        {% else %}text-danger{% endif %}">
+                        {{ result.score }}%
+                    </h1>
+                    <p class="text-muted">Match Score</p>
+                    <div class="progress mb-2" style="height: 20px;">
+                        <div class="progress-bar
+                            {% if result.score >= 70 %}bg-success
+                            {% elif result.score >= 40 %}bg-warning
+                            {% else %}bg-danger{% endif %}"
+                            style="width: {{ result.score }}%">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendation Badge -->
+                <div class="text-center mb-4">
+                    <span class="badge fs-6
+                        {% if result.recommendation == 'Shortlist' %}bg-success
+                        {% elif result.recommendation == 'Review' %}bg-warning
+                        {% else %}bg-danger{% endif %}">
+                        {{ result.recommendation }}
+                    </span>
+                </div>
+
+                <!-- Summary -->
+                <div class="mb-3">
+                    <h6>📋 Summary</h6>
+                    <p>{{ result.summary }}</p>
+                </div>
+
+                <!-- Strengths -->
+                <div class="mb-3">
+                    <h6>✅ Strengths</h6>
+                    <p>{{ result.strengths }}</p>
+                </div>
+
+                <!-- Gaps -->
+                <div class="mb-3">
+                    <h6>❌ Skill Gaps</h6>
+                    <p>{{ result.gaps }}</p>
+                </div>
+
+                <a href="{% url 'jobs:dashboard' %}" class="btn btn-primary">
+                    Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
