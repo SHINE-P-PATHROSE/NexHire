@@ -2,7 +2,8 @@ import google.generativeai as genai
 from django.conf import settings
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+# model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 def screen_resume(resume_text, job_description, job_skills):
     prompt = f"""
