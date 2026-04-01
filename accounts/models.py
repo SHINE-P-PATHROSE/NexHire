@@ -4,7 +4,7 @@ from django.db import models
 class User(AbstractUser):
     ROLE_CHOICES = (
         ('employer', 'Employer'),
-        ('Job Seeker', 'Job Seeker'),
+        ('candidate', 'Candidate'),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Job Seeker')
     phone = models.CharField(max_length=15, blank=True, null=True)
@@ -16,5 +16,5 @@ class User(AbstractUser):
     def is_employer(self):
         return self.role == 'employer'
 
-    def is_Job_Seeker(self):
-        return self.role == 'Job Seeker'
+    def is_candidate(self):
+        return self.role == 'candidate'

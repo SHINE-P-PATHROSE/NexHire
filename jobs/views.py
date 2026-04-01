@@ -11,7 +11,7 @@ def job_list(request):
     job_type = request.GET.get('job_type', '')
     experience = request.GET.get('experience', '')
     if search:
-        jobs = jobs.filter(title__icontains=search) | jobs.filter(skills__icontains=search)
+        jobs = jobs.filter(title__icontains=search) | jobs.filter(starus='active' ,skills__icontains=search)
     if job_type:
         jobs = jobs.filter(job_type=job_type)
     if experience:
