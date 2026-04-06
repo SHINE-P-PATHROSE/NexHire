@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Payment Cancelled{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+    <div style="width:80px;height:80px;background:rgba(245,158,11,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+        <i class="bi bi-x-circle-fill" style="font-size:2.5rem;color:#f59e0b;"></i>
+    </div>
+    <h2 style="font-weight:800;color:var(--nx-navy);">Payment Cancelled</h2>
+    <p style="color:var(--nx-muted);">No worries — you were not charged.</p>
+    <a href="{% url 'payments:pricing' %}" class="nx-btn-primary mt-2" style="display:inline-block;padding:0.75rem 2rem;border:none;"><i class="bi bi-lightning me-2"></i>View Plans Again</a>
+</div>
+{% endblock %}

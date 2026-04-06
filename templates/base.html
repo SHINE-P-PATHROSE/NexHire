@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NexHire{% endblock %} — AI-Powered Job Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --nx-navy: #0d1b3e;
+            --nx-purple: #5b4ab7;
+            --nx-purple-light: #7f77dd;
+            --nx-cyan: #00c9c8;
+            --nx-cyan-light: #5dcaa5;
+            --nx-dark: #080f24;
+            --nx-card: #ffffff;
+            --nx-bg: #f4f6fb;
+            --nx-text: #1a1a2e;
+            --nx-muted: #6b7280;
+            --nx-border: #e5e7eb;
+            --nx-gradient: linear-gradient(135deg, #0d1b3e 0%, #5b4ab7 60%, #00c9c8 100%);
+        }
+        body { background: var(--nx-bg); color: var(--nx-text); font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        /* NAVBAR */
+        .nx-navbar {
+            background: var(--nx-navy);
+            border-bottom: 1px solid rgba(0,201,200,0.15);
+            padding: 0.75rem 0;
+            position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        .nx-brand {
+            font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #ffffff 0%, #00c9c8 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .nx-brand:hover { opacity: 0.9; }
+        .nx-nav-link {
+            color: rgba(255,255,255,0.75) !important; font-size: 0.875rem;
+            padding: 0.4rem 0.75rem !important; border-radius: 6px;
+            transition: all 0.2s; text-decoration: none;
+        }
+        .nx-nav-link:hover { color: #fff !important; background: rgba(255,255,255,0.1); }
+        .nx-btn-outline {
+            border: 1px solid rgba(255,255,255,0.3); color: #fff !important;
+            padding: 0.35rem 1rem; border-radius: 6px; font-size: 0.85rem;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .nx-btn-outline:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.6); }
+        .nx-btn-cyan {
+            background: var(--nx-cyan); color: var(--nx-navy) !important;
+            padding: 0.35rem 1.1rem; border-radius: 6px; font-size: 0.85rem;
+            font-weight: 600; text-decoration: none; border: none; transition: all 0.2s;
+        }
+        .nx-btn-cyan:hover { background: #00b0af; color: var(--nx-navy) !important; }
+        .nx-user-badge {
+            background: rgba(0,201,200,0.15); border: 1px solid rgba(0,201,200,0.3);
+            color: var(--nx-cyan); padding: 0.3rem 0.75rem; border-radius: 99px; font-size: 0.8rem;
+        }
+
+        /* CARDS */
+        .nx-card {
+            background: #fff; border: 1px solid var(--nx-border);
+            border-radius: 12px; transition: all 0.2s;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .nx-card:hover { box-shadow: 0 6px 24px rgba(91,74,183,0.12); border-color: rgba(91,74,183,0.25); transform: translateY(-1px); }
+
+        /* HERO */
+        .nx-hero {
+            background: var(--nx-gradient);
+            padding: 4rem 0 3rem; color: #fff; position: relative; overflow: hidden;
+        }
+        .nx-hero::before {
+            content: ''; position: absolute; top: -40%; right: -10%;
+            width: 500px; height: 500px; border-radius: 50%;
+            background: rgba(0,201,200,0.08); pointer-events: none;
+        }
+        .nx-hero-title { font-size: 2.5rem; font-weight: 800; line-height: 1.2; }
+        .nx-hero-title span { color: var(--nx-cyan); }
+
+        /* SEARCH BAR */
+        .nx-search-bar {
+            background: #fff; border-radius: 12px;
+            padding: 0.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        .nx-search-bar .form-control, .nx-search-bar .form-select {
+            border: 1px solid #e5e7eb; border-radius: 8px;
+            font-size: 0.9rem; padding: 0.6rem 0.9rem;
+        }
+        .nx-search-bar .form-control:focus, .nx-search-bar .form-select:focus {
+            border-color: var(--nx-purple-light); box-shadow: 0 0 0 3px rgba(91,74,183,0.1);
+        }
+        .nx-search-btn {
+            background: var(--nx-gradient); color: #fff; border: none;
+            border-radius: 8px; padding: 0.6rem 1.5rem; font-weight: 600;
+            white-space: nowrap; transition: opacity 0.2s;
+        }
+        .nx-search-btn:hover { opacity: 0.9; color: #fff; }
+
+        /* JOB CARDS */
+        .nx-job-card { border-radius: 12px; border: 1px solid var(--nx-border); background: #fff; transition: all 0.2s; }
+        .nx-job-card:hover { box-shadow: 0 6px 24px rgba(91,74,183,0.12); border-color: var(--nx-purple-light); transform: translateY(-2px); }
+        .nx-company-logo {
+            width: 48px; height: 48px; border-radius: 10px;
+            background: linear-gradient(135deg, var(--nx-navy), var(--nx-purple));
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 700; font-size: 1.1rem; flex-shrink: 0;
+        }
+        .nx-badge-type { background: rgba(91,74,183,0.1); color: var(--nx-purple); border-radius: 99px; padding: 2px 10px; font-size: 0.75rem; font-weight: 500; }
+        .nx-badge-exp { background: rgba(0,201,200,0.1); color: #0aa; border-radius: 99px; padding: 2px 10px; font-size: 0.75rem; font-weight: 500; }
+        .nx-badge-skill { background: #f3f4f6; color: #374151; border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; margin: 2px; display: inline-block; }
+        .nx-salary { color: #059669; font-weight: 600; font-size: 0.875rem; }
+
+        /* BUTTONS */
+        .nx-btn-primary {
+            background: var(--nx-gradient); color: #fff; border: none;
+            border-radius: 8px; padding: 0.6rem 1.5rem; font-weight: 600;
+            text-decoration: none; display: inline-block; transition: opacity 0.2s;
+        }
+        .nx-btn-primary:hover { opacity: 0.9; color: #fff; }
+        .nx-btn-secondary {
+            background: transparent; color: var(--nx-purple); border: 1.5px solid var(--nx-purple);
+            border-radius: 8px; padding: 0.55rem 1.4rem; font-weight: 600;
+            text-decoration: none; display: inline-block; transition: all 0.2s;
+        }
+        .nx-btn-secondary:hover { background: var(--nx-purple); color: #fff; }
+
+        /* STAT CARDS */
+        .nx-stat { border-radius: 12px; padding: 1.5rem; color: #fff; }
+        .nx-stat-purple { background: linear-gradient(135deg, var(--nx-purple), var(--nx-purple-light)); }
+        .nx-stat-cyan { background: linear-gradient(135deg, #0aa, var(--nx-cyan)); }
+        .nx-stat-navy { background: linear-gradient(135deg, var(--nx-navy), #1e3a6e); }
+        .nx-stat-red { background: linear-gradient(135deg, #e24b4a, #f09595); }
+        .nx-stat h2 { font-size: 2rem; font-weight: 800; margin: 0; }
+        .nx-stat p { margin: 0; opacity: 0.85; font-size: 0.875rem; }
+
+        /* FORMS */
+        .nx-form-control {
+            border: 1.5px solid #e5e7eb; border-radius: 8px;
+            padding: 0.65rem 0.9rem; font-size: 0.9rem; width: 100%;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .nx-form-control:focus { border-color: var(--nx-purple-light); box-shadow: 0 0 0 3px rgba(91,74,183,0.1); outline: none; }
+        .nx-form-label { font-weight: 500; font-size: 0.875rem; color: #374151; margin-bottom: 0.35rem; display: block; }
+
+        /* SECTION HEADERS */
+        .nx-section-title { font-size: 1.25rem; font-weight: 700; color: var(--nx-navy); }
+        .nx-divider { height: 2px; background: var(--nx-gradient); border-radius: 2px; width: 40px; margin: 0.5rem 0 1.5rem; }
+
+        /* TABLE */
+        .nx-table { border-radius: 12px; overflow: hidden; border: 1px solid var(--nx-border); }
+        .nx-table thead { background: var(--nx-navy); color: #fff; }
+        .nx-table thead th { font-weight: 500; font-size: 0.8rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 0.85rem 1rem; border: none; }
+        .nx-table tbody td { padding: 0.85rem 1rem; vertical-align: middle; border-color: #f3f4f6; font-size: 0.875rem; }
+        .nx-table tbody tr:hover { background: #f9fafb; }
+
+        /* STATUS BADGES */
+        .nx-status-applied { background: rgba(59,130,246,0.1); color: #2563eb; border-radius: 99px; padding: 3px 10px; font-size: 0.75rem; font-weight: 500; }
+        .nx-status-shortlisted { background: rgba(16,185,129,0.1); color: #059669; border-radius: 99px; padding: 3px 10px; font-size: 0.75rem; font-weight: 500; }
+        .nx-status-rejected { background: rgba(239,68,68,0.1); color: #dc2626; border-radius: 99px; padding: 3px 10px; font-size: 0.75rem; font-weight: 500; }
+        .nx-status-hired { background: rgba(245,158,11,0.1); color: #d97706; border-radius: 99px; padding: 3px 10px; font-size: 0.75rem; font-weight: 500; }
+        .nx-status-reviewed { background: rgba(139,92,246,0.1); color: #7c3aed; border-radius: 99px; padding: 3px 10px; font-size: 0.75rem; font-weight: 500; }
+
+        /* ALERTS */
+        .nx-alert { border-radius: 10px; border: none; padding: 1rem 1.25rem; font-size: 0.875rem; }
+        .nx-alert-warning { background: rgba(245,158,11,0.1); color: #92400e; border-left: 4px solid #f59e0b; }
+        .nx-alert-success { background: rgba(16,185,129,0.1); color: #065f46; border-left: 4px solid #10b981; }
+        .nx-alert-danger { background: rgba(239,68,68,0.1); color: #991b1b; border-left: 4px solid #ef4444; }
+        .nx-alert-info { background: rgba(91,74,183,0.1); color: #3730a3; border-left: 4px solid var(--nx-purple); }
+
+        /* FOOTER */
+        .nx-footer { background: var(--nx-navy); color: rgba(255,255,255,0.6); padding: 2rem 0; margin-top: 4rem; font-size: 0.85rem; }
+        .nx-footer a { color: var(--nx-cyan); text-decoration: none; }
+
+        /* PAGE WRAPPER */
+        .nx-page { min-height: calc(100vh - 60px); }
+
+        /* PROGRESS BAR */
+        .nx-progress { height: 10px; border-radius: 99px; background: #e5e7eb; overflow: hidden; }
+        .nx-progress-bar { height: 100%; border-radius: 99px; background: var(--nx-gradient); transition: width 0.5s; }
+
+        /* PROFILE AVATAR */
+        .nx-avatar {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: var(--nx-gradient);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 700; font-size: 1.4rem;
+        }
+
+        /* SIDEBAR CARD */
+        .nx-sidebar-card { border-radius: 12px; border: 1px solid var(--nx-border); background: #fff; padding: 1.5rem; }
+
+        /* FORM WIDGET OVERRIDE */
+        input[type=text], input[type=email], input[type=password], input[type=number],
+        input[type=url], input[type=date], textarea, select {
+            border: 1.5px solid #e5e7eb !important; border-radius: 8px !important;
+            padding: 0.65rem 0.9rem !important; font-size: 0.9rem !important; width: 100%;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fff;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--nx-purple-light) !important;
+            box-shadow: 0 0 0 3px rgba(91,74,183,0.1) !important; outline: none !important;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nx-navbar">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="/" class="nx-brand">
+                <i class="bi bi-brain me-1" style="font-size:1.2rem;"></i>nexhire
+            </a>
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                {% if user.is_authenticated %}
+                    {% if user.is_employer %}
+                        <a href="{% url 'jobs:dashboard' %}" class="nx-nav-link"><i class="bi bi-grid me-1"></i>Dashboard</a>
+                        <a href="{% url 'jobs:create_job' %}" class="nx-nav-link"><i class="bi bi-plus-circle me-1"></i>Post Job</a>
+                        <a href="{% url 'ai_engine:generate_jd' %}" class="nx-nav-link"><i class="bi bi-stars me-1"></i>AI Tools</a>
+                    {% else %}
+                        <a href="{% url 'candidates:dashboard' %}" class="nx-nav-link"><i class="bi bi-grid me-1"></i>Dashboard</a>
+                        <a href="{% url 'jobs:list' %}" class="nx-nav-link"><i class="bi bi-briefcase me-1"></i>Browse Jobs</a>
+                        <a href="{% url 'candidates:edit_profile' %}" class="nx-nav-link"><i class="bi bi-person me-1"></i>Profile</a>
+                    {% endif %}
+                    <a href="{% url 'payments:pricing' %}" class="nx-nav-link"><i class="bi bi-lightning me-1"></i>Plans</a>
+                    <span class="nx-user-badge"><i class="bi bi-person-circle me-1"></i>{{ user.username }}</span>
+                    <a href="{% url 'accounts:logout' %}" class="nx-btn-outline">Logout</a>
+                {% else %}
+                    <a href="{% url 'jobs:list' %}" class="nx-nav-link">Browse Jobs</a>
+                    <a href="{% url 'payments:pricing' %}" class="nx-nav-link">Pricing</a>
+                    <a href="{% url 'accounts:login' %}" class="nx-btn-outline">Login</a>
+                    <a href="{% url 'accounts:register' %}" class="nx-btn-cyan">Get Started</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="nx-page">
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="nx-alert nx-alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'warning' %}warning{% elif message.tags == 'success' %}success{% else %}info{% endif %} mb-2">
+            {% if message.tags == 'error' %}<i class="bi bi-exclamation-circle me-2"></i>
+            {% elif message.tags == 'success' %}<i class="bi bi-check-circle me-2"></i>
+            {% elif message.tags == 'warning' %}<i class="bi bi-exclamation-triangle me-2"></i>
+            {% else %}<i class="bi bi-info-circle me-2"></i>{% endif %}
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+</div>
+
+<!-- FOOTER -->
+<footer class="nx-footer">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <span style="color:#fff;font-weight:700;font-size:1.1rem;">nexhire</span>
+                <span class="ms-3">AI-Powered Job Platform</span>
+            </div>
+            <div class="col-md-6 text-md-end mt-2 mt-md-0">
+                <a href="{% url 'jobs:list' %}" class="me-3">Browse Jobs</a>
+                <a href="{% url 'payments:pricing' %}" class="me-3">Pricing</a>
+                <span>© 2026 NexHire</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

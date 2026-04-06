@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}AI Job Description Generator{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="mb-4">
+        <h2 style="font-weight:800;color:var(--nx-navy);">AI Job Description Generator</h2>
+        <p style="color:var(--nx-muted);">Let AI write a professional job description in seconds</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="nx-card p-4">
+                <div class="d-flex align-items-center gap-2 mb-4">
+                    <div style="width:36px;height:36px;background:var(--nx-gradient);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-stars" style="color:#fff;"></i>
+                    </div>
+                    <h5 style="font-weight:700;margin:0;">Generate with AI</h5>
+                </div>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="nx-form-label">Job Title</label>
+                        <input type="text" name="title" class="w-100" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:0.65rem 0.9rem;" placeholder="e.g. Senior Django Developer" value="{{ form_data.title|default:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="nx-form-label">Required Skills</label>
+                        <input type="text" name="skills" class="w-100" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:0.65rem 0.9rem;" placeholder="Python, Django, PostgreSQL, REST API" value="{{ form_data.skills|default:'' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="nx-form-label">Experience Level</label>
+                        <select name="experience" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:0.65rem 0.9rem;width:100%;">
+                            <option>Fresher</option><option>1-2 Years</option><option>3-5 Years</option><option>5+ Years</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="nx-form-label">Job Type</label>
+                        <select name="job_type" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:0.65rem 0.9rem;width:100%;">
+                            <option>Full Time</option><option>Part Time</option><option>Remote</option><option>Contract</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="nx-form-label">Location</label>
+                        <input type="text" name="location" class="w-100" style="border:1.5px solid #e5e7eb;border-radius:8px;padding:0.65rem 0.9rem;" placeholder="Bangalore, India" value="{{ form_data.location|default:'' }}">
+                    </div>
+                    <button type="submit" class="nx-btn-primary w-100 text-center" style="display:block;padding:0.75rem;border:none;cursor:pointer;">
+                        <i class="bi bi-stars me-2"></i>Generate with AI
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% if generated %}
+        <div class="col-lg-7">
+            <div class="nx-card p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 style="font-weight:700;margin:0;"><i class="bi bi-file-text me-2" style="color:var(--nx-purple);"></i>Generated Description</h5>
+                    <button onclick="copyToClipboard()" class="nx-btn-secondary" style="padding:0.35rem 1rem;font-size:0.8rem;"><i class="bi bi-clipboard me-1"></i>Copy</button>
+                </div>
+                <div id="jd-content" style="white-space:pre-wrap;line-height:1.7;font-size:0.875rem;color:#374151;background:#f9fafb;border-radius:8px;padding:1rem;max-height:500px;overflow-y:auto;">{{ generated }}</div>
+                <a href="{% url 'jobs:create_job' %}" class="nx-btn-primary mt-3" style="display:inline-block;padding:0.5rem 1.2rem;border:none;font-size:0.875rem;">
+                    <i class="bi bi-arrow-right me-1"></i>Use This — Post Job
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<script>
+function copyToClipboard() {
+    navigator.clipboard.writeText(document.getElementById('jd-content').innerText);
+    alert('Copied to clipboard!');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Billing{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <h2 style="font-weight:800;color:var(--nx-navy);">Billing & Subscription</h2>
+    <div class="nx-divider"></div>
+    <div class="row g-4 mt-1">
+        <div class="col-md-5">
+            <div class="nx-card p-4">
+                <h6 style="font-weight:700;margin-bottom:1rem;">Current Plan</h6>
+                {% if subscription %}
+                <div class="nx-stat nx-stat-purple p-3 mb-3" style="border-radius:10px;">
+                    <h3 style="font-size:1.5rem;">{{ subscription.plan.name|title }}</h3>
+                    <p>Active Subscription</p>
+                </div>
+                <div style="display:grid;gap:0.5rem;font-size:0.875rem;">
+                    <div class="d-flex justify-content-between"><span style="color:var(--nx-muted);">Status</span><span class="nx-status-shortlisted">{{ subscription.status|title }}</span></div>
+                    <div class="d-flex justify-content-between"><span style="color:var(--nx-muted);">Started</span><span>{{ subscription.started_at|date:"d M Y" }}</span></div>
+                </div>
+                {% else %}
+                <p style="color:var(--nx-muted);">You are on the Free plan.</p>
+                <a href="{% url 'payments:pricing' %}" class="nx-btn-primary" style="display:inline-block;padding:0.5rem 1.5rem;border:none;"><i class="bi bi-lightning me-1"></i>Upgrade Now</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="nx-card p-0 overflow-hidden">
+                <div class="px-4 py-3" style="border-bottom:1px solid #f3f4f6;"><h6 style="font-weight:700;margin:0;">Payment History</h6></div>
+                <table class="nx-table w-100">
+                    <thead><tr><th>Plan</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+                    <tbody>
+                        {% for payment in payments %}
+                        <tr>
+                            <td style="font-weight:600;">{{ payment.plan.name|title }}</td>
+                            <td class="nx-salary">₹{{ payment.amount }}</td>
+                            <td><span class="nx-status-shortlisted">{{ payment.status|title }}</span></td>
+                            <td style="color:var(--nx-muted);font-size:0.8rem;">{{ payment.created_at|date:"d M Y" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center py-4" style="color:var(--nx-muted);">No payments yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

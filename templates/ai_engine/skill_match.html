@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Skill Match{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="nx-card p-4">
+                <div class="d-flex align-items-center gap-2 mb-4">
+                    <div style="width:40px;height:40px;background:var(--nx-gradient);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-bullseye" style="color:#fff;font-size:1.1rem;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:800;margin:0;">Skill Match Analysis</h4>
+                        <p style="color:var(--nx-muted);margin:0;font-size:0.85rem;">{{ job.title }} — {{ job.company.name }}</p>
+                    </div>
+                </div>
+
+                <div class="text-center mb-4">
+                    <div style="font-size:3rem;font-weight:800;color:{% if result.score >= 70 %}#10b981{% elif result.score >= 40 %}#f59e0b{% else %}#ef4444{% endif %};">{{ result.score }}%</div>
+                    <p style="color:var(--nx-muted);">{{ result.total_matched }} of {{ result.total_required }} required skills matched</p>
+                    <div class="nx-progress" style="max-width:400px;margin:0 auto;">
+                        <div class="nx-progress-bar" style="width:{{ result.score }}%;background:{% if result.score >= 70 %}#10b981{% elif result.score >= 40 %}#f59e0b{% else %}#ef4444{% endif %};"></div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div style="background:rgba(16,185,129,0.05);border-radius:10px;padding:1rem;">
+                            <div style="font-size:0.75rem;color:#059669;margin-bottom:0.75rem;font-weight:600;"><i class="bi bi-check-circle me-1"></i>MATCHED SKILLS</div>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for skill in result.matched %}
+                                <span style="background:rgba(16,185,129,0.1);color:#059669;border-radius:6px;padding:3px 10px;font-size:0.8rem;">{{ skill }}</span>
+                                {% empty %}<span style="color:var(--nx-muted);font-size:0.85rem;">No matches</span>{% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="background:rgba(239,68,68,0.05);border-radius:10px;padding:1rem;">
+                            <div style="font-size:0.75rem;color:#dc2626;margin-bottom:0.75rem;font-weight:600;"><i class="bi bi-x-circle me-1"></i>MISSING SKILLS</div>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for skill in result.missing %}
+                                <span style="background:rgba(239,68,68,0.1);color:#dc2626;border-radius:6px;padding:3px 10px;font-size:0.8rem;">{{ skill }}</span>
+                                {% empty %}<span style="color:#059669;font-size:0.85rem;">You have all skills!</span>{% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <a href="{% url 'jobs:apply' job.pk %}" class="nx-btn-primary" style="display:inline-block;padding:0.65rem 1.5rem;border:none;"><i class="bi bi-send me-1"></i>Apply Now</a>
+                    <a href="{% url 'jobs:list' %}" class="nx-btn-secondary" style="padding:0.65rem 1.5rem;"><i class="bi bi-arrow-left me-1"></i>Back to Jobs</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row g-4">
+        <!-- LEFT: Job Details -->
+        <div class="col-lg-8">
+            <div class="nx-card p-4 mb-3">
+                <div class="d-flex gap-3 align-items-start mb-4">
+                    <div class="nx-company-logo" style="width:60px;height:60px;font-size:1.4rem;">{{ job.company.name|slice:":1"|upper }}</div>
+                    <div>
+                        <h2 style="font-weight:800;font-size:1.5rem;margin-bottom:0.25rem;">{{ job.title }}</h2>
+                        <p style="color:var(--nx-muted);margin:0;"><i class="bi bi-building me-1"></i>{{ job.company.name }} &nbsp;·&nbsp; <i class="bi bi-geo-alt me-1"></i>{{ job.location }}</p>
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <span class="nx-badge-type"><i class="bi bi-clock me-1"></i>{{ job.get_job_type_display }}</span>
+                            <span class="nx-badge-exp"><i class="bi bi-bar-chart me-1"></i>{{ job.get_experience_display }}</span>
+                            {% if job.salary_min %}<span class="nx-salary"><i class="bi bi-currency-rupee"></i>{{ job.salary_min }}–{{ job.salary_max }}/mo</span>{% endif %}
+                            {% if job.deadline %}<span style="background:#fef3c7;color:#92400e;border-radius:99px;padding:2px 10px;font-size:0.75rem;"><i class="bi bi-calendar me-1"></i>Deadline: {{ job.deadline }}</span>{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <h5 style="font-weight:700;color:var(--nx-navy);margin-bottom:0.5rem;">About This Role</h5>
+                <div class="nx-divider"></div>
+                <p style="line-height:1.8;color:#374151;">{{ job.description }}</p>
+
+                <h5 style="font-weight:700;color:var(--nx-navy);margin-bottom:0.5rem;margin-top:1.5rem;">Requirements</h5>
+                <div class="nx-divider"></div>
+                <p style="line-height:1.8;color:#374151;">{{ job.requirements }}</p>
+
+                <h5 style="font-weight:700;color:var(--nx-navy);margin-bottom:0.5rem;margin-top:1.5rem;">Skills Required</h5>
+                <div class="nx-divider"></div>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for skill in job.get_skills_list %}
+                    <span class="nx-badge-skill" style="font-size:0.85rem;padding:5px 12px;">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Apply Sidebar -->
+        <div class="col-lg-4">
+            <div class="nx-sidebar-card mb-3">
+                <div class="text-center mb-3">
+                    <div class="nx-company-logo mx-auto mb-2" style="width:56px;height:56px;font-size:1.3rem;">{{ job.company.name|slice:":1"|upper }}</div>
+                    <h6 style="font-weight:700;">{{ job.company.name }}</h6>
+                    <p style="color:var(--nx-muted);font-size:0.85rem;margin:0;"><i class="bi bi-geo-alt me-1"></i>{{ job.company.location }}</p>
+                    {% if job.company.website %}
+                    <a href="{{ job.company.website }}" target="_blank" style="font-size:0.8rem;color:var(--nx-purple);"><i class="bi bi-globe me-1"></i>Visit Website</a>
+                    {% endif %}
+                </div>
+                <hr style="border-color:#f3f4f6;">
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'accounts:login' %}" class="nx-btn-primary w-100 text-center" style="display:block;padding:0.75rem;">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login to Apply
+                    </a>
+                {% elif already_applied %}
+                    <button class="w-100 py-2" style="background:rgba(16,185,129,0.1);color:#059669;border:1.5px solid #059669;border-radius:8px;font-weight:600;" disabled>
+                        <i class="bi bi-check-circle me-2"></i>Already Applied
+                    </button>
+                {% elif user.is_candidate %}
+                    <a href="{% url 'jobs:apply' job.pk %}" class="nx-btn-primary w-100 text-center" style="display:block;padding:0.75rem;">
+                        <i class="bi bi-send me-2"></i>Apply Now
+                    </a>
+                {% endif %}
+                {% if user.is_authenticated and user.is_candidate %}
+                <a href="{% url 'ai_engine:skill_match' job.pk %}" class="nx-btn-secondary w-100 text-center mt-2" style="display:block;padding:0.65rem;">
+                    <i class="bi bi-bullseye me-2"></i>Check Skill Match
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Job Info Card -->
+            <div class="nx-sidebar-card">
+                <h6 style="font-weight:700;margin-bottom:1rem;">Job Overview</h6>
+                <div style="display:grid;gap:0.75rem;">
+                    <div class="d-flex gap-2">
+                        <i class="bi bi-briefcase" style="color:var(--nx-purple);width:20px;"></i>
+                        <div><div style="font-size:0.75rem;color:var(--nx-muted);">Job Type</div><div style="font-size:0.85rem;font-weight:500;">{{ job.get_job_type_display }}</div></div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <i class="bi bi-bar-chart" style="color:var(--nx-cyan);width:20px;"></i>
+                        <div><div style="font-size:0.75rem;color:var(--nx-muted);">Experience</div><div style="font-size:0.85rem;font-weight:500;">{{ job.get_experience_display }}</div></div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <i class="bi bi-geo-alt" style="color:#f59e0b;width:20px;"></i>
+                        <div><div style="font-size:0.75rem;color:var(--nx-muted);">Location</div><div style="font-size:0.85rem;font-weight:500;">{{ job.location }}</div></div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <i class="bi bi-clock" style="color:#10b981;width:20px;"></i>
+                        <div><div style="font-size:0.75rem;color:var(--nx-muted);">Posted</div><div style="font-size:0.85rem;font-weight:500;">{{ job.created_at|timesince }} ago</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

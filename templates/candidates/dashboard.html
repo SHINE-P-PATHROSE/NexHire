@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}My Dashboard{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 style="font-weight:800;color:var(--nx-navy);margin-bottom:0.25rem;">My Dashboard</h2>
+            <p style="color:var(--nx-muted);margin:0;">Track your applications and profile</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'jobs:list' %}" class="nx-btn-secondary"><i class="bi bi-briefcase me-1"></i>Browse Jobs</a>
+            <a href="{% url 'candidates:edit_profile' %}" class="nx-btn-primary"><i class="bi bi-pencil me-1"></i>Edit Profile</a>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4 col-6">
+            <div class="nx-stat nx-stat-purple text-center">
+                <h2>{{ total_applications }}</h2>
+                <p>Applications Sent</p>
+            </div>
+        </div>
+        <div class="col-md-4 col-6">
+            <div class="nx-stat nx-stat-cyan text-center">
+                <h2>{{ shortlisted }}</h2>
+                <p>Shortlisted</p>
+            </div>
+        </div>
+        <div class="col-md-4 col-6">
+            <div class="nx-stat nx-stat-red text-center">
+                <h2>{{ rejected }}</h2>
+                <p>Rejected</p>
+            </div>
+        </div>
+    </div>
+
+    {% if not profile.skills or not profile.resume %}
+    <div class="nx-alert nx-alert-warning mb-4">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        Your profile is incomplete! <a href="{% url 'candidates:edit_profile' %}" style="color:var(--nx-purple);font-weight:600;">Complete it now</a> to get better AI job matches.
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
+        <!-- Profile Card -->
+        <div class="col-lg-4">
+            <div class="nx-card p-4">
+                <div class="text-center mb-3">
+                    <div class="nx-avatar mx-auto mb-2">{{ user.username|slice:":1"|upper }}</div>
+                    <h6 style="font-weight:700;margin:0;">{{ user.username }}</h6>
+                    <p style="color:var(--nx-muted);font-size:0.85rem;margin:0;">{{ profile.current_position|default:"Position not set" }}</p>
+                </div>
+                <hr style="border-color:#f3f4f6;">
+                <div style="display:grid;gap:0.6rem;font-size:0.85rem;">
+                    <div class="d-flex gap-2"><i class="bi bi-geo-alt" style="color:var(--nx-purple);width:18px;"></i><span>{{ profile.location|default:"Location not set" }}</span></div>
+                    <div class="d-flex gap-2"><i class="bi bi-briefcase" style="color:var(--nx-cyan);width:18px;"></i><span>{{ profile.experience_years }} years experience</span></div>
+                    <div class="d-flex gap-2"><i class="bi bi-mortarboard" style="color:#f59e0b;width:18px;"></i><span>{{ profile.education|default:"Not set" }}</span></div>
+                    <div class="d-flex gap-2"><i class="bi bi-circle-fill" style="color:#10b981;width:18px;font-size:0.6rem;margin-top:0.3rem;"></i><span>{{ profile.get_availability_display }}</span></div>
+                </div>
+                <hr style="border-color:#f3f4f6;">
+                <div>
+                    <div style="font-size:0.75rem;color:var(--nx-muted);margin-bottom:0.5rem;">SKILLS</div>
+                    <div class="d-flex flex-wrap gap-1">
+                        {% for skill in profile.get_skills_list %}
+                        <span class="nx-badge-skill">{{ skill }}</span>
+                        {% empty %}
+                        <span style="color:var(--nx-muted);font-size:0.8rem;">No skills added</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% if profile.resume %}
+                <div class="mt-3">
+                    <a href="{{ profile.resume.url }}" target="_blank" class="nx-btn-secondary w-100 text-center" style="display:block;padding:0.5rem;">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>Download Resume
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Applications -->
+        <div class="col-lg-8">
+            <div class="nx-card p-0 overflow-hidden">
+                <div class="px-4 py-3 d-flex justify-content-between align-items-center" style="border-bottom:1px solid #f3f4f6;">
+                    <h6 style="font-weight:700;margin:0;">Recent Applications</h6>
+                    <a href="{% url 'candidates:my_applications' %}" style="color:var(--nx-purple);font-size:0.85rem;">View all</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="nx-table w-100">
+                        <thead>
+                            <tr><th>Job</th><th>Company</th><th>Applied</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for app in applications|slice:":6" %}
+                            <tr>
+                                <td><a href="{% url 'jobs:detail' app.job.pk %}" style="color:var(--nx-navy);font-weight:600;text-decoration:none;">{{ app.job.title }}</a></td>
+                                <td style="color:var(--nx-muted);">{{ app.job.company.name }}</td>
+                                <td style="color:var(--nx-muted);font-size:0.8rem;">{{ app.applied_at|date:"d M Y" }}</td>
+                                <td>
+                                    {% if app.status == 'applied' %}<span class="nx-status-applied">Applied</span>
+                                    {% elif app.status == 'shortlisted' %}<span class="nx-status-shortlisted">Shortlisted</span>
+                                    {% elif app.status == 'rejected' %}<span class="nx-status-rejected">Rejected</span>
+                                    {% elif app.status == 'hired' %}<span class="nx-status-hired">Hired</span>
+                                    {% elif app.status == 'reviewed' %}<span class="nx-status-reviewed">Reviewed</span>
+                                    {% else %}<span class="nx-status-applied">{{ app.status }}</span>{% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4" style="color:var(--nx-muted);">
+                                    No applications yet. <a href="{% url 'jobs:list' %}" style="color:var(--nx-purple);">Browse jobs</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

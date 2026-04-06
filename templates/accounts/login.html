@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="text-center mb-4">
+                <div style="width:56px;height:56px;background:var(--nx-gradient);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                    <i class="bi bi-brain" style="font-size:1.5rem;color:#fff;"></i>
+                </div>
+                <h2 style="font-weight:800;color:var(--nx-navy);">Welcome back</h2>
+                <p style="color:var(--nx-muted);">Login to your NexHire account</p>
+            </div>
+            <div class="nx-card p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="nx-form-label"><i class="bi bi-{% if field.name == 'username' %}person{% else %}lock{% endif %} me-1"></i>{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}<div style="color:#dc2626;font-size:0.8rem;margin-top:0.25rem;">{{ field.errors }}</div>{% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="nx-btn-primary w-100 text-center mt-2" style="display:block;padding:0.75rem;border:none;cursor:pointer;">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                    </button>
+                </form>
+                <p class="text-center mt-3 mb-0" style="font-size:0.875rem;color:var(--nx-muted);">
+                    No account? <a href="{% url 'accounts:register' %}" style="color:var(--nx-purple);font-weight:600;">Create one free</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

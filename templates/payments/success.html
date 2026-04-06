@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Payment Successful{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+    <div style="width:80px;height:80px;background:rgba(16,185,129,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+        <i class="bi bi-check-circle-fill" style="font-size:2.5rem;color:#10b981;"></i>
+    </div>
+    <h2 style="font-weight:800;color:var(--nx-navy);">Payment Successful!</h2>
+    <p style="color:var(--nx-muted);font-size:1.1rem;">Your subscription is now active. Start posting jobs!</p>
+    <a href="{% url 'jobs:dashboard' %}" class="nx-btn-primary mt-2" style="display:inline-block;padding:0.75rem 2rem;border:none;"><i class="bi bi-grid me-2"></i>Go to Dashboard</a>
+</div>
+{% endblock %}

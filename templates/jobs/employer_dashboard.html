@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %}Employer Dashboard{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 style="font-weight:800;color:var(--nx-navy);margin-bottom:0.25rem;">Employer Dashboard</h2>
+            <p style="color:var(--nx-muted);margin:0;">Manage your job listings and applications</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'ai_engine:generate_jd' %}" class="nx-btn-secondary"><i class="bi bi-stars me-1"></i>AI Generate JD</a>
+            <a href="{% url 'jobs:create_job' %}" class="nx-btn-primary"><i class="bi bi-plus-lg me-1"></i>Post New Job</a>
+        </div>
+    </div>
+
+    {% if not company %}
+    <div class="nx-card p-5 text-center">
+        <i class="bi bi-building" style="font-size:3rem;color:#d1d5db;"></i>
+        <h5 class="mt-3" style="color:var(--nx-navy);">Set Up Your Company Profile</h5>
+        <p style="color:var(--nx-muted);">Create your company profile to start posting jobs</p>
+        <a href="{% url 'jobs:create_company' %}" class="nx-btn-primary"><i class="bi bi-plus-lg me-1"></i>Create Company Profile</a>
+    </div>
+    {% else %}
+
+    <!-- Stats -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3 col-6">
+            <div class="nx-stat nx-stat-purple text-center">
+                <h2>{{ jobs.count }}</h2>
+                <p>Jobs Posted</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="nx-stat nx-stat-cyan text-center">
+                {% with total=0 %}
+                <h2>{% for job in jobs %}{{ job.applications.count|add:0 }}{% endfor %}</h2>
+                {% endwith %}
+                <p>Total Applications</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="nx-stat nx-stat-navy text-center">
+                <h2>{{ company.name|slice:":1" }}</h2>
+                <p>{{ company.name }}</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="nx-stat" style="background:linear-gradient(135deg,#f59e0b,#fbbf24);">
+                <h2 style="color:#fff;">AI</h2>
+                <p style="color:rgba(255,255,255,0.85);">Screening Ready</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jobs Table -->
+    <div class="nx-card p-0 overflow-hidden">
+        <div class="px-4 py-3 d-flex justify-content-between align-items-center" style="border-bottom:1px solid #f3f4f6;">
+            <h6 style="font-weight:700;margin:0;">Your Job Listings</h6>
+        </div>
+        <div class="table-responsive">
+            <table class="nx-table w-100">
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Type</th>
+                        <th>Applications</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr>
+                        <td>
+                            <div style="font-weight:600;">{{ job.title }}</div>
+                            <div style="font-size:0.75rem;color:var(--nx-muted);"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</div>
+                        </td>
+                        <td><span class="nx-badge-type">{{ job.get_job_type_display }}</span></td>
+                        <td>
+                            <span style="font-weight:600;color:var(--nx-purple);">{{ job.applications.count }}</span>
+                            <span style="color:var(--nx-muted);font-size:0.8rem;"> applications</span>
+                        </td>
+                        <td>
+                            <span class="{% if job.status == 'active' %}nx-status-shortlisted{% elif job.status == 'draft' %}nx-status-reviewed{% else %}nx-status-rejected{% endif %}">
+                                {{ job.status|capfirst }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1 flex-wrap">
+                                <a href="{% url 'jobs:detail' job.pk %}" class="nx-btn-secondary" style="padding:0.3rem 0.75rem;font-size:0.8rem;">View</a>
+                                {% for app in job.applications.all %}
+                                <a href="{% url 'ai_engine:screen' app.pk %}" class="nx-btn-primary" style="padding:0.3rem 0.75rem;font-size:0.8rem;">
+                                    <i class="bi bi-stars me-1"></i>AI Screen
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4" style="color:var(--nx-muted);">
+                            No jobs posted yet. <a href="{% url 'jobs:create_job' %}" style="color:var(--nx-purple);">Post your first job</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

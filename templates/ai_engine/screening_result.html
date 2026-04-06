@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}AI Screening Result{% endblock %}
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="nx-card p-4">
+                <div class="d-flex align-items-center gap-2 mb-4">
+                    <div style="width:40px;height:40px;background:var(--nx-gradient);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                        <i class="bi bi-stars" style="color:#fff;font-size:1.1rem;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-weight:800;margin:0;">AI Screening Result</h4>
+                        <p style="color:var(--nx-muted);margin:0;font-size:0.85rem;">{{ application.candidate.username }} → {{ application.job.title }}</p>
+                    </div>
+                </div>
+                <hr style="border-color:#f3f4f6;">
+
+                <!-- Score Circle -->
+                <div class="text-center mb-4">
+                    <div style="width:120px;height:120px;border-radius:50%;border:6px solid {% if result.score >= 70 %}#10b981{% elif result.score >= 40 %}#f59e0b{% else %}#ef4444{% endif %};display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
+                        <div>
+                            <div style="font-size:2rem;font-weight:800;color:{% if result.score >= 70 %}#10b981{% elif result.score >= 40 %}#f59e0b{% else %}#ef4444{% endif %};">{{ result.score|floatformat:0 }}%</div>
+                            <div style="font-size:0.7rem;color:var(--nx-muted);">Match Score</div>
+                        </div>
+                    </div>
+                    <div class="nx-progress" style="max-width:300px;margin:0 auto 1rem;">
+                        <div class="nx-progress-bar" style="width:{{ result.score }}%;background:{% if result.score >= 70 %}#10b981{% elif result.score >= 40 %}#f59e0b{% else %}#ef4444{% endif %};"></div>
+                    </div>
+                    <span style="font-size:0.9rem;font-weight:600;padding:5px 16px;border-radius:99px;
+                        {% if result.recommendation == 'Shortlist' %}background:rgba(16,185,129,0.1);color:#059669;
+                        {% elif result.recommendation == 'Review' %}background:rgba(245,158,11,0.1);color:#d97706;
+                        {% else %}background:rgba(239,68,68,0.1);color:#dc2626;{% endif %}">
+                        {{ result.recommendation }}
+                    </span>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <div style="background:#f9fafb;border-radius:10px;padding:1rem;">
+                            <div style="font-size:0.75rem;color:var(--nx-muted);margin-bottom:0.5rem;font-weight:600;">SUMMARY</div>
+                            <p style="margin:0;line-height:1.7;font-size:0.875rem;">{{ result.summary }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="background:rgba(16,185,129,0.05);border-left:3px solid #10b981;border-radius:0 8px 8px 0;padding:1rem;">
+                            <div style="font-size:0.75rem;color:#059669;margin-bottom:0.5rem;font-weight:600;">STRENGTHS</div>
+                            <p style="margin:0;font-size:0.875rem;line-height:1.7;">{{ result.strengths }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div style="background:rgba(239,68,68,0.05);border-left:3px solid #ef4444;border-radius:0 8px 8px 0;padding:1rem;">
+                            <div style="font-size:0.75rem;color:#dc2626;margin-bottom:0.5rem;font-weight:600;">SKILL GAPS</div>
+                            <p style="margin:0;font-size:0.875rem;line-height:1.7;">{{ result.gaps }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'jobs:dashboard' %}" class="nx-btn-secondary"><i class="bi bi-arrow-left me-1"></i>Back to Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
