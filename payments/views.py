@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # from django.shortcuts import render, redirect, get_object_or_404
 # from django.contrib.auth.decorators import login_required
 # from django.contrib import messages
@@ -133,6 +134,8 @@
 #         return HttpResponse(status=400)
 
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -140,7 +143,10 @@ from django.conf import settings
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Plan, Subscription, Payment
+<<<<<<< HEAD
 from accounts.models import User
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 import stripe
 import json
 
@@ -151,14 +157,21 @@ PLAN_PRICES = {
     'pro': 299900,      # ₹2999 in paise
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 def pricing(request):
     plans = Plan.objects.all()
     user_plan = None
     if request.user.is_authenticated:
         try:
             user_plan = request.user.subscription.plan.name
+<<<<<<< HEAD
         except Exception:
+=======
+        except:
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
             user_plan = 'free'
     return render(request, 'payments/pricing.html', {
         'plans': plans,
@@ -166,7 +179,10 @@ def pricing(request):
         'stripe_key': settings.STRIPE_PUBLISHABLE_KEY
     })
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @login_required
 def create_checkout(request, plan_name):
     if not request.user.is_employer():
@@ -183,7 +199,11 @@ def create_checkout(request, plan_name):
                     'currency': 'inr',
                     'unit_amount': PLAN_PRICES[plan_name],
                     'product_data': {
+<<<<<<< HEAD
                         'name': f'NexHire - {plan_name.title()} Plan',
+=======
+                        'name': f'AI Job Board - {plan_name.title()} Plan',
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
                         'description': f'Monthly subscription for {plan_name} plan',
                     },
                     'recurring': {'interval': 'month'},
@@ -203,7 +223,10 @@ def create_checkout(request, plan_name):
         messages.error(request, f'Payment failed: {str(e)}')
         return redirect('payments:pricing')
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @login_required
 def payment_success(request):
     session_id = request.GET.get('session_id')
@@ -214,12 +237,16 @@ def payment_success(request):
             plan = Plan.objects.get(name=plan_name)
             subscription, created = Subscription.objects.get_or_create(
                 employer=request.user,
+<<<<<<< HEAD
                 defaults={
                     'plan': plan,
                     'status': 'active',
                     'stripe_subscription_id': session.subscription,
                     'stripe_customer_id': session.customer,
                 }
+=======
+                defaults={'plan': plan, 'status': 'active'}
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
             )
             if not created:
                 subscription.plan = plan
@@ -239,18 +266,28 @@ def payment_success(request):
             messages.error(request, f'Error processing payment: {str(e)}')
     return render(request, 'payments/success.html')
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @login_required
 def payment_cancel(request):
     messages.warning(request, 'Payment cancelled.')
     return render(request, 'payments/cancel.html')
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @login_required
 def billing_dashboard(request):
     try:
         subscription = request.user.subscription
+<<<<<<< HEAD
     except Exception:
+=======
+    except:
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
         subscription = None
     payments = Payment.objects.filter(employer=request.user).order_by('-created_at')
     return render(request, 'payments/billing.html', {
@@ -258,17 +295,24 @@ def billing_dashboard(request):
         'payments': payments
     })
 
+<<<<<<< HEAD
 
 # ── FIX 7: Webhook handles checkout.session.completed + invoice.paid + subscription.deleted ──
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @csrf_exempt
 def stripe_webhook(request):
     payload = request.body
     sig_header = request.META.get('HTTP_STRIPE_SIGNATURE')
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
     try:
         event = stripe.Webhook.construct_event(
             payload, sig_header, settings.STRIPE_WEBHOOK_SECRET
         )
+<<<<<<< HEAD
     except (ValueError, stripe.error.SignatureVerificationError):
         return HttpResponse(status=400)
 
@@ -375,3 +419,16 @@ def _handle_subscription_updated(stripe_sub):
         sub.save()
     except Subscription.DoesNotExist:
         pass
+=======
+        if event['type'] == 'customer.subscription.deleted':
+            subscription_id = event['data']['object']['id']
+            try:
+                sub = Subscription.objects.get(stripe_subscription_id=subscription_id)
+                sub.status = 'cancelled'
+                sub.save()
+            except Subscription.DoesNotExist:
+                pass
+        return HttpResponse(status=200)
+    except Exception as e:
+        return HttpResponse(status=400)
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978

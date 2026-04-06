@@ -9,6 +9,10 @@ from jobs.models import Application
 def candidate_dashboard(request):
     if request.user.is_employer():
         return redirect('jobs:dashboard')
+<<<<<<< HEAD
+=======
+    # Auto create profile if doesn't exist
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
     profile, created = CandidateProfile.objects.get_or_create(user=request.user)
     applications = Application.objects.filter(
         candidate=request.user

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+<<<<<<< HEAD
 {% block title %}My Dashboard{% endblock %}
 {% block content %}
 <div class="container py-4">
@@ -121,3 +122,109 @@
     </div>
 </div>
 {% endblock %}
+=======
+{% block title %}Candidate Dashboard{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>👤 My Dashboard</h2>
+    <a href="{% url 'candidates:edit_profile' %}" class="btn btn-outline-primary">Edit Profile</a>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card bg-primary text-white text-center p-3">
+            <h3>{{ total_applications }}</h3>
+            <p class="mb-0">Total Applications</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card bg-success text-white text-center p-3">
+            <h3>{{ shortlisted }}</h3>
+            <p class="mb-0">Shortlisted</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card bg-danger text-white text-center p-3">
+            <h3>{{ rejected }}</h3>
+            <p class="mb-0">Rejected</p>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Completion -->
+{% if not profile.skills or not profile.resume %}
+<div class="alert alert-warning">
+    ⚠️ Your profile is incomplete!
+    <a href="{% url 'candidates:edit_profile' %}" class="alert-link">Complete your profile</a>
+    to get better job matches.
+</div>
+{% endif %}
+
+<!-- Profile Summary -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h5>Profile Summary</h5>
+        <p><strong>Position:</strong> {{ profile.current_position|default:"Not set" }}</p>
+        <p><strong>Experience:</strong> {{ profile.experience_years }} years</p>
+        <p><strong>Location:</strong> {{ profile.location|default:"Not set" }}</p>
+        <p><strong>Availability:</strong> {{ profile.get_availability_display }}</p>
+        <div>
+            <strong>Skills:</strong>
+            {% for skill in profile.get_skills_list %}
+            <span class="badge bg-light text-dark border">{{ skill }}</span>
+            {% empty %}
+            <span class="text-muted">No skills added yet</span>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Recent Applications -->
+<h4>Recent Applications</h4>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Applied</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for app in applications|slice:":5" %}
+        <tr>
+            <td><a href="{% url 'jobs:detail' app.job.pk %}">{{ app.job.title }}</a></td>
+            <td>{{ app.job.company.name }}</td>
+            <td>{{ app.applied_at|date:"d M Y" }}</td>
+            <td>
+                {% if app.status == 'applied' %}
+                <span class="badge bg-primary">Applied</span>
+                {% elif app.status == 'shortlisted' %}
+                <span class="badge bg-success">Shortlisted</span>
+                {% elif app.status == 'rejected' %}
+                <span class="badge bg-danger">Rejected</span>
+                {% elif app.status == 'hired' %}
+                <span class="badge bg-warning">Hired</span>
+                {% else %}
+                <span class="badge bg-secondary">{{ app.status }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-muted text-center">
+                No applications yet.
+                <a href="{% url 'jobs:list' %}">Browse jobs</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if applications.count > 5 %}
+<a href="{% url 'candidates:my_applications' %}" class="btn btn-outline-primary btn-sm">
+    View All Applications
+</a>
+{% endif %}
+{% endblock %}
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978

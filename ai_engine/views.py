@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # from django.shortcuts import render, get_object_or_404, redirect
 # from django.contrib.auth.decorators import login_required
 # from django.contrib import messages
@@ -101,6 +102,8 @@
 
 
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -111,12 +114,16 @@ from .utils import screen_resume, generate_job_description, match_skills
 import PyPDF2
 import io
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 def extract_text_from_resume(resume_file):
     try:
         pdf_reader = PyPDF2.PdfReader(io.BytesIO(resume_file.read()))
         text = ''
         for page in pdf_reader.pages:
+<<<<<<< HEAD
             text += page.extract_text() or ''
         return text.strip()
     except Exception:
@@ -133,12 +140,19 @@ def get_employer_plan(user):
         pass
     return None
 
+=======
+            text += page.extract_text()
+        return text
+    except:
+        return "Could not extract resume text"
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 
 @login_required
 def screen_application(request, application_id):
     if not request.user.is_employer():
         messages.error(request, 'Employers only.')
         return redirect('jobs:list')
+<<<<<<< HEAD
 
     application = get_object_or_404(Application, id=application_id)
 
@@ -171,11 +185,30 @@ def screen_application(request, application_id):
                 f"Cover Letter: {application.cover_letter}"
             )
 
+=======
+    application = get_object_or_404(Application, id=application_id)
+    try:
+        profile = application.candidate.candidate_profile
+        resume_text = ""
+        if profile.resume:
+            profile.resume.open()
+            resume_text = extract_text_from_resume(profile.resume)
+        if not resume_text:
+            resume_text = f"""
+            Candidate: {application.candidate.username}
+            Skills: {profile.skills}
+            Experience: {profile.experience_years} years
+            Education: {profile.education}
+            Current Position: {profile.current_position}
+            Cover Letter: {application.cover_letter}
+            """
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
         result = screen_resume(
             resume_text,
             application.job.description,
             application.job.skills
         )
+<<<<<<< HEAD
 
         application.ai_score = result['score']
         application.ai_feedback = (
@@ -186,17 +219,33 @@ def screen_application(request, application_id):
         )
         application.save()
 
+=======
+        application.ai_score = result['score']
+        application.ai_feedback = f"""
+Summary: {result['summary']}
+Strengths: {result['strengths']}
+Gaps: {result['gaps']}
+Recommendation: {result['recommendation']}
+        """
+        application.save()
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
         messages.success(request, f'AI screening complete! Score: {result["score"]}%')
         return render(request, 'ai_engine/screening_result.html', {
             'application': application,
             'result': result
         })
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
     except Exception as e:
         messages.error(request, f'AI screening failed: {str(e)}')
         return redirect('jobs:dashboard')
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @login_required
 def generate_jd(request):
     if not request.user.is_employer():
@@ -219,7 +268,10 @@ def generate_jd(request):
             messages.error(request, f'Failed to generate JD: {str(e)}')
     return render(request, 'ai_engine/generate_jd.html', {})
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @login_required
 def skill_match(request, job_id):
     job = get_object_or_404(Job, id=job_id)

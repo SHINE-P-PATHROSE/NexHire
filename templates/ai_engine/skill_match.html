@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Skill Match{% endblock %}
 {% block content %}
+<<<<<<< HEAD
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-7">
@@ -42,16 +43,71 @@
                                 <span style="background:rgba(239,68,68,0.1);color:#dc2626;border-radius:6px;padding:3px 10px;font-size:0.8rem;">{{ skill }}</span>
                                 {% empty %}<span style="color:#059669;font-size:0.85rem;">You have all skills!</span>{% endfor %}
                             </div>
+=======
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3>🎯 Skill Match — {{ job.title }}</h3>
+                <p class="text-muted">{{ job.company.name }}</p>
+                <hr>
+
+                <!-- Score -->
+                <div class="text-center mb-4">
+                    <h1 class="display-4
+                        {% if result.score >= 70 %}text-success
+                        {% elif result.score >= 40 %}text-warning
+                        {% else %}text-danger{% endif %}">
+                        {{ result.score }}%
+                    </h1>
+                    <p>{{ result.total_matched }} of {{ result.total_required }} skills matched</p>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar bg-success" style="width: {{ result.score }}%">
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
                         </div>
                     </div>
                 </div>
 
+<<<<<<< HEAD
                 <div class="d-flex gap-2">
                     <a href="{% url 'jobs:apply' job.pk %}" class="nx-btn-primary" style="display:inline-block;padding:0.65rem 1.5rem;border:none;"><i class="bi bi-send me-1"></i>Apply Now</a>
                     <a href="{% url 'jobs:list' %}" class="nx-btn-secondary" style="padding:0.65rem 1.5rem;"><i class="bi bi-arrow-left me-1"></i>Back to Jobs</a>
+=======
+                <!-- Matched Skills -->
+                <div class="mb-3">
+                    <h6>✅ Matched Skills</h6>
+                    {% for skill in result.matched %}
+                    <span class="badge bg-success me-1">{{ skill }}</span>
+                    {% empty %}
+                    <p class="text-muted">No matching skills found</p>
+                    {% endfor %}
+                </div>
+
+                <!-- Missing Skills -->
+                <div class="mb-3">
+                    <h6>❌ Missing Skills</h6>
+                    {% for skill in result.missing %}
+                    <span class="badge bg-danger me-1">{{ skill }}</span>
+                    {% empty %}
+                    <p class="text-success">You have all required skills!</p>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-4">
+                    <a href="{% url 'jobs:apply' job.pk %}" class="btn btn-primary me-2">
+                        Apply Now
+                    </a>
+                    <a href="{% url 'jobs:list' %}" class="btn btn-outline-secondary">
+                        Back to Jobs
+                    </a>
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
                 </div>
             </div>
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 {% endblock %}
+=======
+{% endblock %}
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978

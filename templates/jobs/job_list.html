@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+<<<<<<< HEAD
 {% block title %}Find Jobs{% endblock %}
 {% block content %}
 
@@ -94,3 +95,83 @@
     </div>
 </div>
 {% endblock %}
+=======
+{% block title %}Jobs{% endblock %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>🔍 Find Your Dream Job</h2>
+    </div>
+    {% if user.is_authenticated and user.is_employer %}
+    <div class="col-auto">
+        <a href="{% url 'jobs:create_job' %}" class="btn btn-primary">+ Post a Job</a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Search & Filter -->
+<form method="GET" class="row g-2 mb-4">
+    <div class="col-md-5">
+        <input type="text" name="search" class="form-control" placeholder="Search jobs or skills..."
+            value="{{ request.GET.search }}">
+    </div>
+    <div class="col-md-3">
+        <select name="job_type" class="form-select">
+            <option value="">All Types</option>
+            <option value="full_time">Full Time</option>
+            <option value="part_time">Part Time</option>
+            <option value="remote">Remote</option>
+            <option value="internship">Internship</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select name="experience" class="form-select">
+            <option value="">All Levels</option>
+            <option value="fresher">Fresher</option>
+            <option value="junior">Junior</option>
+            <option value="mid">Mid</option>
+            <option value="senior">Senior</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+<!-- Job Cards -->
+<div class="row">
+    {% for job in jobs %}
+    <div class="col-md-6 mb-3">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ job.title }}</h5>
+                <h6 class="text-muted">{{ job.company.name }} — {{ job.location }}</h6>
+                <div class="mb-2">
+                    <span class="badge bg-primary">{{ job.get_job_type_display }}</span>
+                    <span class="badge bg-secondary">{{ job.get_experience_display }}</span>
+                </div>
+                <p class="card-text small text-muted">{{ job.description|truncatewords:20 }}</p>
+                <div class="mb-2">
+                    {% for skill in job.get_skills_list %}
+                    <span class="badge bg-light text-dark border">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+                {% if job.salary_min and job.salary_max %}
+                <p class="text-success small">₹{{ job.salary_min|floatformat:0 }} - ₹{{ job.salary_max|floatformat:0
+                    }}/month</p>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'jobs:detail' job.pk %}" class="btn btn-outline-primary btn-sm">View Details</a>
+                <small class="text-muted float-end">{{ job.created_at|timesince }} ago</small>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col">
+        <p class="text-muted">No jobs found. Try a different search.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978

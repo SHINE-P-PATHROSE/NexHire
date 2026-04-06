@@ -1,7 +1,10 @@
 from django.db import models
 from accounts.models import User
+<<<<<<< HEAD
 from django.utils import timezone
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 
 class Company(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE, related_name='company')
@@ -70,7 +73,11 @@ class Application(models.Model):
     ai_score = models.FloatField(blank=True, null=True)
     ai_feedback = models.TextField(blank=True, null=True)
     applied_at = models.DateTimeField(auto_now_add=True)
+<<<<<<< HEAD
     created_at = models.DateTimeField(default=timezone.now, editable=False)
+=======
+
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
     class Meta:
         unique_together = ('job', 'candidate')
 

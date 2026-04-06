@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+<<<<<<< HEAD
 {% block title %}Create Account{% endblock %}
 {% block content %}
 <div class="container py-5">
@@ -12,10 +13,20 @@
                 <p style="color:var(--nx-muted);">AI-powered job matching starts here</p>
             </div>
             <div class="nx-card p-4">
+=======
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">Create Account</h3>
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
                 <form method="POST">
                     {% csrf_token %}
                     {% for field in form %}
                     <div class="mb-3">
+<<<<<<< HEAD
                         <label class="nx-form-label">{{ field.label }}</label>
                         {{ field }}
                         {% if field.help_text %}<div style="font-size:0.78rem;color:var(--nx-muted);margin-top:0.25rem;">{{ field.help_text }}</div>{% endif %}
@@ -29,8 +40,24 @@
                 <p class="text-center mt-3 mb-0" style="font-size:0.875rem;color:var(--nx-muted);">
                     Already have an account? <a href="{% url 'accounts:login' %}" style="color:var(--nx-purple);font-weight:600;">Login</a>
                 </p>
+=======
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                </form>
+                <p class="text-center mt-3">Already have an account? <a href="{% url 'accounts:login' %}">Login</a></p>
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
             </div>
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 {% endblock %}
+=======
+{% endblock %}
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978

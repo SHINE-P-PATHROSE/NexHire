@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # from django.shortcuts import render, get_object_or_404, redirect
 # from django.contrib.auth.decorators import login_required
 # from django.contrib import messages
@@ -100,12 +101,15 @@
 
 
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Job, Company, Application
 from .forms import JobForm, CompanyForm, ApplicationForm
 
+<<<<<<< HEAD
 
 def get_employer_plan(user):
     """Returns the employer's active subscription plan, or None if on free/no plan."""
@@ -120,23 +124,35 @@ def get_employer_plan(user):
 
 def job_list(request):
     jobs = Job.objects.filter(status='active').order_by('-created_at')
+=======
+def job_list(request):
+    jobs = Job.objects.filter(status='active').order_by('-created_at')
+    # Search & filter
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
     search = request.GET.get('search', '')
     job_type = request.GET.get('job_type', '')
     experience = request.GET.get('experience', '')
     if search:
+<<<<<<< HEAD
         from django.db.models import Q
         jobs = jobs.filter(
             Q(title__icontains=search) |
             Q(skills__icontains=search) |
             Q(description__icontains=search)
         )
+=======
+        jobs = jobs.filter(title__icontains=search) | jobs.filter(starus='active' ,skills__icontains=search)
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
     if job_type:
         jobs = jobs.filter(job_type=job_type)
     if experience:
         jobs = jobs.filter(experience=experience)
     return render(request, 'jobs/job_list.html', {'jobs': jobs})
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 def job_detail(request, pk):
     job = get_object_or_404(Job, pk=pk)
     already_applied = False
@@ -144,7 +160,10 @@ def job_detail(request, pk):
         already_applied = Application.objects.filter(job=job, candidate=request.user).exists()
     return render(request, 'jobs/job_detail.html', {'job': job, 'already_applied': already_applied})
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @login_required
 def employer_dashboard(request):
     if not request.user.is_employer():
@@ -158,17 +177,24 @@ def employer_dashboard(request):
         jobs = []
     return render(request, 'jobs/employer_dashboard.html', {'company': company, 'jobs': jobs})
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @login_required
 def create_job(request):
     if not request.user.is_employer():
         return redirect('jobs:list')
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
     try:
         company = request.user.company
     except Company.DoesNotExist:
         messages.warning(request, 'Please create your company profile first.')
         return redirect('jobs:create_company')
+<<<<<<< HEAD
 
     # ── FIX 1: Enforce job_post_limit based on active subscription plan ──
     plan = get_employer_plan(request.user)
@@ -194,6 +220,8 @@ def create_job(request):
         return redirect('payments:pricing')
     # ── END FIX 1 ──
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
     if request.method == 'POST':
         form = JobForm(request.POST)
         if form.is_valid():
@@ -204,6 +232,7 @@ def create_job(request):
             return redirect('jobs:dashboard')
     else:
         form = JobForm()
+<<<<<<< HEAD
 
     return render(request, 'jobs/create_job.html', {
         'form': form,
@@ -211,6 +240,9 @@ def create_job(request):
         'current_job_count': current_job_count,
     })
 
+=======
+    return render(request, 'jobs/create_job.html', {'form': form})
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 
 @login_required
 def create_company(request):
@@ -226,7 +258,10 @@ def create_company(request):
         form = CompanyForm()
     return render(request, 'jobs/create_company.html', {'form': form})
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
 @login_required
 def apply_job(request, pk):
     job = get_object_or_404(Job, pk=pk)

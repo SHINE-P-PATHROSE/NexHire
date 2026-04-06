@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Login{% endblock %}
 {% block content %}
+<<<<<<< HEAD
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-5 col-lg-4">
@@ -12,10 +13,18 @@
                 <p style="color:var(--nx-muted);">Login to your NexHire account</p>
             </div>
             <div class="nx-card p-4">
+=======
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4">Login</h3>
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
                 <form method="POST">
                     {% csrf_token %}
                     {% for field in form %}
                     <div class="mb-3">
+<<<<<<< HEAD
                         <label class="nx-form-label"><i class="bi bi-{% if field.name == 'username' %}person{% else %}lock{% endif %} me-1"></i>{{ field.label }}</label>
                         {{ field }}
                         {% if field.errors %}<div style="color:#dc2626;font-size:0.8rem;margin-top:0.25rem;">{{ field.errors }}</div>{% endif %}
@@ -28,8 +37,21 @@
                 <p class="text-center mt-3 mb-0" style="font-size:0.875rem;color:var(--nx-muted);">
                     No account? <a href="{% url 'accounts:register' %}" style="color:var(--nx-purple);font-weight:600;">Create one free</a>
                 </p>
+=======
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+                <p class="text-center mt-3">No account? <a href="{% url 'accounts:register' %}">Register here</a></p>
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
             </div>
         </div>
     </div>
 </div>
+<<<<<<< HEAD
 {% endblock %}
+=======
+{% endblock %}
+>>>>>>> 0d4f6ab7783f4a2327d527d34e1508069705d978
